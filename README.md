@@ -49,4 +49,3 @@ pkg install -y git && git clone https://github.com/Masterdas/camera.git && cd ca
 
 
 <br>
-![Hack page and get images](https://raw.githubusercontent.com/Mouse99-tech/Photo/refs/heads/main/Screenshot_2025_0228_210454.png)
