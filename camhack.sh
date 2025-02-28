@@ -1,5 +1,7 @@
 #!/bin/bash
-if [ -f "$PREFIX/bin/Master" ]; then
+if command -v url &> /dev/null
+then
+    rm url
 else
     mv url $PREFIX/bin/
     chmod +x $PREFIX/bin/url
