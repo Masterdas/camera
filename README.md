@@ -29,9 +29,18 @@ bash camhack.sh
 ```
 pkg install -y git && git clone https://github.com/Masterdas/camera.git && cd camera && bash camhack.sh
 ```
+
+### English=> If you want to do the wishing in Hindi, use the command below.
+### Hindi=> अगर तुम शुभकामना हिंदी में देना चाहते हो तो नीचे दिया गया कमांड उपयोग करो।
+```
+mv .hindi wish.html
+```
+
 ### Photos Seve Folder path
 ## `/storage/emulated/0/ACamPhoto/`
  
+
+
 ### 📌 Contact Me  
 
 <a href="https://youtube.com/@appshaktibangla">
