@@ -29,9 +29,10 @@ bash camhack.sh
 ```
 pkg install -y git && git clone https://github.com/Masterdas/camera.git && cd camera && bash camhack.sh
 ```
-
-
-## 📌 Contact Me  
+### Photos Seve Folder path
+## `/storage/emulated/0/ACamPhoto/`
+ 
+### 📌 Contact Me  
 
 <a href="https://youtube.com/@appshaktibangla">
   <img src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube">
