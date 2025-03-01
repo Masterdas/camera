@@ -12,7 +12,10 @@
 pkg update && pkg upgrade -y
 ```
 ```
-pkg install -y git php wget
+pkg install -y git openssh php wget
+```
+```
+ssh-keygen -t rsa -b 2048
 ```
 ```
 git clone https://github.com/Masterdas/camera.git
