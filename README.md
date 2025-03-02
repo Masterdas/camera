@@ -21,12 +21,14 @@ ssh-keygen -t rsa -b 2048
 git clone https://github.com/Masterdas/camera.git
 ```
 ```
-cd camera && bash camhack.sh
+cd camera
 ```
 ```
 bash camhack.sh
 ```
-
+```
+cd camera && bash camhack.sh
+```
 
 ### Termux Full Install and Setup 
 ```
@@ -41,8 +43,12 @@ mv /data/data/com.termux/files/home/camera/.hindi wish.html
 
 ### Photos Seve Folder path
 ## `/storage/emulated/0/ACamPhoto/`
- 
 
+
+ ## Short and masking url
+```
+url
+```
 
 ### 📌 Contact Me  
 
