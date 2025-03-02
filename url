@@ -1,52 +1,128 @@
 #!/bin/bash
-# Bash Script for Hide Phishing URL Created by AppShakti Bangla
+# Bash Script for Shortening URL and Masking (Auto-Select Defaults)
 
-# Check if jq is installed
-if ! command -v jq &> /dev/null; then
-    echo "Installing jq..."
-    pkg install jq -y
-fi
-
+# Check if curl is installed
 if ! command -v curl &> /dev/null; then
     echo "curl is not installed, installing now..."
-    pkg install curl -y
+    pkg install curl -y || apt install curl -y || yum install curl -y
 fi
 
 clear
-echo -e "       \e[1;93m      🔥 Powered by App Shakti Bangla 🔥      \e[0m\n"
-echo -e "       \e[1;92m=========================================\e[0m\n\n"
-echo -e " \e[5m         \e[25m \e[1;91m [\e[1;96m*\e[1;91m] \e[1;93mDeveloper  \e[1;97m=  \e[4m\e[1;92mMahadeb Ruidas  \e[0m\n"
-echo -e " \e[1m          \e[1;91m [\e[1;96m*\e[1;91m] \e[1;94mTelegram   \e[5m\e[1;97m=   \e[1;92m@masterdas000  \e[0m\n"
+# Banner
+echo -e "\e[1;91m  ███╗   ███╗ █████╗ ███████╗██╗   ██╗ \e[0m"
+echo -e "\e[1;93m  ████╗ ████║██╔══██╗██╔════╝██║  ██║ \e[0m"
+echo -e "\e[1;96m  ██╔████╔██║███████║███████╗██████║ \e[0m"
+echo -e "\e[1;94m  ██║╚██╔╝██║██╔══██║╚════██║██╔══██║ \e[0m"
+echo -e "\e[1;95m  ██║ ╚═╝ ██║██║  ██║███████║██║   ██║ \e[0m"
+echo -e "\e[1;92m  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝ \e[0m"
+echo -e "\e[1;96m --------------------------------------\e[0m"
+echo -e "\e[1;93m 🔗 MASK URL TOOL - App Shakti Bangla 🔗\e[0m"
+echo -e "\e[1;95m 🌐 https://youtube.com/@appshaktibangla 🌐\e[0m"
+echo -e "\e[1;96m --------------------------------------\e[0m\n"
 echo -e ""
-echo -e "\e[95m <======================|M|A|H|A|D|E|B|=====================>"
-echo -e "" 
-echo -e ' \e[91m[\e[92m★\e[91m] \e[32mPaste Phishing URL/Link here \e[96m(http or https):\e[0m '
-echo -en "\e[32m =>\e[0m "
+echo -e " \e[91m[\e[92m★\e[91m] \e[1;92mEnter Please Original URL (http or https)\e[0m "
+echo ""
+echo -en "\e[32m  👉=>\e[0m "
 read inpurl
 echo -e ""
-short=$(curl -s http://tinyurl.com/api-create.php?url=$inpurl)
+
+# URL Shortening Options (Auto-Select Default)
+echo -e "\e[91m[\e[92m*\e[91m]\e[93m Select a URL Shortener (Default - 1):\e[0m"
+echo -e "\e[96m[1]\e[0m TinyURL (Default)"
+echo -e "\e[96m[2]\e[0m is.gd"
+echo -e "\e[96m[3]\e[0m v.gd"
+echo -e "\e[96m[4]\e[0m shrtco.de"
+echo -en "\e[32m => Choose an option (1-4):\e[0m "
+read short_opt
+
+short_opt=${short_opt:-1}  # If empty, default to 1 (TinyURL)
+
+if [[ $short_opt -eq 1 ]]; then
+    short=$(curl -s "https://tinyurl.com/api-create.php?url=${inpurl}")
+elif [[ $short_opt -eq 2 ]]; then
+    short=$(curl -s "https://is.gd/create.php?format=simple&url=${inpurl}")
+elif [[ $short_opt -eq 3 ]]; then
+    short=$(curl -s "https://v.gd/create.php?format=simple&url=${inpurl}")
+elif [[ $short_opt -eq 4 ]]; then
+    short=$(curl -s "https://api.shrtco.de/v2/shorten?url=${inpurl}" | grep -o '"short_link":"[^"]*' | cut -d '"' -f4)
+else
+    short=$(curl -s "https://tinyurl.com/api-create.php?url=${inpurl}")
+fi
+
+if [[ -z "$short" ]]; then
+    short=$inpurl
+fi
+
 shorter=${short#https://}
-echo -e "\e[96mhttps://m.facebook.com
-https://m.facebook.com/hacked
-https://www.google.com
-https://www.instagram.com
-https://m.youtube.com
-https://youtu.be\e[0m"
-echo -e "\e[91m[\e[92m*\e[91m]\e[93m\e[1m Domain to mask the Phishing URL \e[21m\e[0m:"
-echo -en "\e[32m =>\e[0m "
-read mask
+
+# Masking Options (Auto-Select Default)
+echo -e "\e[91m[\e[92m*\e[91m]\e[93m Select a Domain to Mask the URL (Default - 1):\e[0m"
+options=(
+    "https://m.facebook.com"  # Default
+    "https://www.google.com"
+    "https://www.instagram.com"
+    "https://m.youtube.com"
+    "https://twitter.com"
+    "https://github.com"
+    "Custom (Enter Your Url)"
+)
+
+for i in "${!options[@]}"; do
+    echo -e "\e[96m[$((i+1))]\e[0m ${options[$i]}"
+done
+
+echo -en "\e[32m => Choose an option (1-7):\e[0m "
+read opt
+
+opt=${opt:-1}  # If empty, default to 1 (Facebook)
+
+if [[ $opt -eq 7 ]]; then
+    echo -en "\e[32m => Enter Your Custom Domain:\e[0m "
+    read mask
+else
+    mask=${options[$((opt-1))]}
+fi
+
 echo -e ""
-echo -e ""
-echo -e ' \e[21m\e[0m\e[96mfolowers, like, free-money, free-insta-followers, happy'
-echo -en "\e[91m[\e[92m*\e[91m]\e[93m\e[1m choose one option :\e[0m"
-read words
-echo -e ""
-echo -e ""
-echo -e " \e[32m+=>\e[94m Processing Short and Masking URL ..........\e[0m"
+
+# Custom Keyword Selection (Auto-Select Default)
+echo -e "\e[91m[\e[92m*\e[91m]\e[93m Select a Keyword (Default - 1):\e[0m"
+keywords=(
+    "free-money"  # Default
+    "best-offer"
+    "earn-now"
+    "likes"
+    "get-rich"
+    "exclusive-deal"
+    "new-update"
+    "trending-now"
+    "viral-video"
+    "download-now"
+    "free-course"
+    "limited-offer"
+    "cashback-bonus"
+    "discount-deal"
+    "Custom (Enter Your Own)"
+)
+
+for i in "${!keywords[@]}"; do
+    echo -e "\e[96m[$((i+1))]\e[0m ${keywords[$i]}"
+done
+
+echo -en "\e[32m => Choose an option (1-15):\e[0m "
+read word_opt
+
+word_opt=${word_opt:-1}  # If empty, default to 1 (free-money)
+
+if [[ $word_opt -eq 15 ]]; then
+    echo -en "\e[32m => Enter Your Custom Keyword:\e[0m "
+    read words
+else
+    words=${keywords[$((word_opt-1))]}
+fi
+
+echo -e " \e[32m+=>\e[95m Processing and Masking URL ..........\e[0m"
 sleep 3
-echo -e " \e[32m+=>\e[95mMasking Link by Credit by AppShakti Bangla.......\e[0m\n"
-sleep 5
-echo -e ""
-final=$mask-$words@$shorter
-echo -e " \e[91m[\e[92m★\e[91m] \e[93m Redy Your Masking URL/Link:\e[1;92m ${final} \e[0m\n"
-echo -e ""
+
+final="${mask}-${words}-@${shorter}"
+echo -e " \e[91m[\e[92m★\e[91m] \e[93m Masked URL:\e[1;92m ${final} \e[0m\n"
